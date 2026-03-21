@@ -89,14 +89,17 @@ void handle_collision(Particle *p1, Particle *p2) {
   float d = dist(p1->pos, p2->pos);
   Vecf n = div_vec(sub(p2->pos, p1->pos), d);
   float overlap = 2 * get_pixel_radius() - d;
+  log_str("overlap: %f\n", overlap);
 
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
-  float imp = -0.9 * speed_norm; // Restitution 0.8
-  log_str("Debug: %f\n", imp);
+  float imp = -0.75 * speed_norm; // Restitution e = 0.5: coef = -(1+e)/2
+  log_str("impulse: %f\n", imp);
 
   // Update positions
+  log_str("  p1 before: %f %f\n", p1->pos.x, p1->pos.y);
   p1->pos = sub(p1->pos, mul(n, overlap / 2.0));
+  log_str("  p1 after: %f %f\n", p1->pos.x, p1->pos.y);
   p2->pos = add(p2->pos, mul(n, overlap / 2.0));
 
   // Update velocities
@@ -111,8 +114,8 @@ void handle_collisions() {
     for (int j = i + 1; j < o->currSizePs; ++j) {
       Particle *p1 = &(o->ps[i]);
       Particle *p2 = &(o->ps[j]);
-      if (abs((int)p1->pos.x - (int)p2->pos.x) <= 1 &&
-          abs((int)p1->pos.y - (int)p2->pos.y) <= 1) {
+      if (fabsf(p1->pos.x - p2->pos.x) <= 0.5 &&
+          fabsf(p1->pos.y - p2->pos.y) <= 0.5) {
         handle_collision(p1, p2);
       }
     }

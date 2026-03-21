@@ -52,6 +52,11 @@ int main(int argc, char *argv[]) {
       quit = 1;
       break;
 
+    case KEY_RESIZE:
+      resizeterm(0, 0);
+      wake_all();
+      break;
+
       // case KEY_MOUSE:
       //   MEVENT event;
       //   if (getmouse(&event) == OK) {

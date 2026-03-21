@@ -25,3 +25,4 @@ void init_particles(int num);
 void physics_update();
 void draw(); // TODO: This function should be in its own file. However, that
              // requires creating an application-wide context variable
+void wake_all();

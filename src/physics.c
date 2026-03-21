@@ -146,8 +146,8 @@ void handle_collisions() {
       Particle *p1 = &(o->ps[i]);
       Particle *p2 = &(o->ps[j]);
 
-      if (fabsf(p1->pos.x - p2->pos.x) <= CONTACT_DIST &&
-          fabsf(p1->pos.y - p2->pos.y) <= CONTACT_DIST) {
+      if (fabsf(p1->pos.x - p2->pos.x) <= 0.5 * CONTACT_DIST &&
+          fabsf(p1->pos.y - p2->pos.y) <= 0.5 * CONTACT_DIST) {
         handle_collision(p1, p2);
       }
     }
@@ -182,5 +182,12 @@ void draw() {
   for (int i = 0; i < o->currSizePs; ++i) {
     Particle *p = &(o->ps[i]);
     mvaddch((int)p->pos.y, (int)p->pos.x, p->symbol);
+  }
+}
+
+void wake_all() {
+  for (int i = 0; i < o->currSizePs; ++i) {
+    o->ps[i].isSleeping = 0;
+    o->ps[i].idleFrames = 0;
   }
 }

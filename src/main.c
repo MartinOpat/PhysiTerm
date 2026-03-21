@@ -16,12 +16,15 @@ int main(int argc, char *argv[]) {
   nodelay(stdscr, TRUE);
   curs_set(0);
 
+  // Enable mouse events
+  mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+
   // Randomize seed
   srand(time(NULL));
 
   // Test
-  Particle p = {40, 10, 5.0, 0.0, 'o'};
-  Vecf g = {0, 1.0}; // gravity
+  Particle p = {{{40.0}, {10.0}}, {{5.0}, {0.0}}, 'o'};
+  Vecf g = {{0}, {1.0}}; // gravity
 
   int quit = 0;
 
@@ -43,11 +46,19 @@ int main(int argc, char *argv[]) {
 
     // Border
     if (p.pos.x <= 0 || p.pos.x >= COLS - 1) {
-      p.vel.x = -p.vel.x * 0.8;
+      // Friction
+      p.vel = mul(p.vel, 0.8);
+
+      // Boundary
+      p.vel.x = -p.vel.x;
       p.pos.x = max(0.0, min(p.pos.x, (float)(COLS - 1)));
     }
     if (p.pos.y <= 0 || p.pos.y >= LINES - 1) {
-      p.vel.y = -p.vel.y * 0.8;
+      // Friction
+      p.vel = mul(p.vel, 0.8);
+
+      // Boundary
+      p.vel.y = -p.vel.y;
       p.pos.y = max(0.0, min(p.pos.y, (float)(LINES - 1)));
     }
 

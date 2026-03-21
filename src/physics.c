@@ -54,7 +54,13 @@ void update_velocities() {
   for (int i = 0; i < o->currSizePs; ++i) {
     if (o->ps[i].isSleeping)
       continue;
+
+    // Integrate
     o->ps[i].vel = add(o->ps[i].vel, mul(g, dt));
+
+    // Cap
+    o->ps[i].vel.x = max(-MAX_SPEED, min(MAX_SPEED, o->ps[i].vel.x));
+    o->ps[i].vel.y = max(-MAX_SPEED, min(MAX_SPEED, o->ps[i].vel.y));
   }
 }
 
@@ -97,6 +103,7 @@ void handle_collision(Particle *p1, Particle *p2) {
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
   float imp = -0.75 * speed_norm; // Restitution e = 0.5: coef = -(1+e)/2
+  imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
   // Update positions
   p1->pos = sub(p1->pos, mul(n, overlap / 2.0));

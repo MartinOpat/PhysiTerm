@@ -5,6 +5,9 @@
 #include "particles.h"
 #include "vec.h"
 
+#define MAX_IMPULSE 10
+#define MAX_SPEED 10
+
 typedef struct {
   Particle *ps;
   int maxSizePs;

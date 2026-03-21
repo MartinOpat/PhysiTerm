@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[]) {
   // Handle argvs
-  int numParticles = 128;
+  int numParticles = 128; // default
   if (argc > 1) {
     char *p;
     numParticles = (int)strtol(argv[1], &p, 10);

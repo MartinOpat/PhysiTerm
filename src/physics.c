@@ -1,6 +1,8 @@
 #include "physics.h"
 #include "algorithm.h"
+#include "particles.h"
 #include "vec.h"
+#include "window.h"
 #include <ncurses.h>
 #include <stdlib.h>
 
@@ -82,9 +84,44 @@ void apply_boundary() {
   }
 }
 
+void handle_collision(Particle *p1, Particle *p2) {
+  // Helper vars.
+  float d = dist(p1->pos, p2->pos);
+  Vecf n = div_vec(sub(p2->pos, p1->pos), d);
+  float overlap = 2 * get_pixel_radius() - d;
+
+  Vecf v_rel = sub(p2->vel, p1->vel);
+  float speed_norm = dot(v_rel, n);
+  float imp = -speed_norm;
+
+  // Update positions
+  p1->pos = sub(p1->pos, mul(n, overlap / 2.0));
+  p2->pos = add(p2->pos, mul(n, overlap / 2.0));
+
+  // Update velocities
+  if (speed_norm <= 0) {
+    p1->vel = sub(p1->vel, mul(n, imp));
+    p2->vel = add(p2->vel, mul(n, imp));
+  }
+}
+
+void handle_collisions() {
+  for (int i = 0; i < o->currSizePs; ++i) {
+    for (int j = i + 1; j < o->currSizePs; ++j) {
+      Particle p1 = o->ps[i];
+      Particle p2 = o->ps[j];
+      if ((int)p1.pos.x == (int)p2.pos.x && (int)p1.pos.y == (int)p2.pos.y) {
+        printf("Collision!\n");
+        handle_collision(&p1, &p2);
+      }
+    }
+  }
+}
+
 void physics_update() {
   update_velocities();
   update_positions();
+  handle_collisions();
   apply_boundary();
 }
 

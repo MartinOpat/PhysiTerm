@@ -98,7 +98,7 @@ void handle_collision(Particle *p1, Particle *p2) {
   // Helper vars.
   float d = dist(p1->pos, p2->pos);
   Vecf n = div_vec(sub(p2->pos, p1->pos), d);
-  float overlap = 2 * get_pixel_radius() - d;
+  float overlap = CONTACT_DIST - d;
 
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
@@ -137,10 +137,8 @@ void handle_collisions() {
       Particle *p1 = &(o->ps[i]);
       Particle *p2 = &(o->ps[j]);
 
-      // The check distane shuold be at least 2x the pixel radius since that is
-      // what gets enforced in the collision handling
-      if (fabsf(p1->pos.x - p2->pos.x) <= 2 * get_pixel_radius() &&
-          fabsf(p1->pos.y - p2->pos.y) <= 2 * get_pixel_radius()) {
+      if (fabsf(p1->pos.x - p2->pos.x) <= CONTACT_DIST &&
+          fabsf(p1->pos.y - p2->pos.y) <= CONTACT_DIST) {
         handle_collision(p1, p2);
       }
     }

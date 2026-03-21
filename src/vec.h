@@ -49,7 +49,7 @@ static inline Vecf div_vec(Vecf v1, float a) {
   return v1;
 }
 
-static inline float dot(Vecf v1, Vecf v2) { return v1.x * v2.x + v1.y + v2.y; }
+static inline float dot(Vecf v1, Vecf v2) { return v1.x * v2.x + v1.y * v2.y; }
 
 // Advanced operations
 

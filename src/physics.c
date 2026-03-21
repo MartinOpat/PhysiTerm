@@ -105,12 +105,27 @@ void handle_collision(Particle *p1, Particle *p2) {
   float imp = -0.75 * speed_norm; // Restitution e = 0.5: coef = -(1+e)/2
   imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
-  // Update positions
-  p1->pos = sub(p1->pos, mul(n, overlap / 2.0));
-  p2->pos = add(p2->pos, mul(n, overlap / 2.0));
+  // Update sleeping
+  if (speed_norm < -WAKE_THRESHOLD) {
+    p1->isSleeping = 0;
+    p1->idleFrames = 0;
+    p2->isSleeping = 0;
+    p2->idleFrames = 0;
+  } else if (p1->isSleeping && p2->isSleeping) {
+    return;
+  } else if (!p1->isSleeping && p2->isSleeping) {
+    p1->idleFrames += 2; // Fall asleep faster
+  } else if (p1->isSleeping && !p2->isSleeping) {
+    p2->idleFrames += 2; // Fall asleep faster
+  }
 
-  // Update velocities
+  // Only collide if particles are moving towards each other
   if (speed_norm <= 0) {
+    // Update positions
+    p1->pos = sub(p1->pos, mul(n, overlap / 2.0));
+    p2->pos = add(p2->pos, mul(n, overlap / 2.0));
+
+    // Update velocities
     p1->vel = sub(p1->vel, mul(n, imp));
     p2->vel = add(p2->vel, mul(n, imp));
   }
@@ -122,17 +137,10 @@ void handle_collisions() {
       Particle *p1 = &(o->ps[i]);
       Particle *p2 = &(o->ps[j]);
 
-      if (!p1->isSleeping || !p2->isSleeping) {
-        p1->isSleeping = 0;
-        p1->idleFrames = 0;
-        p2->isSleeping = 0;
-        p2->idleFrames = 0;
-      } else {
-        continue;
-      }
-
-      if (fabsf(p1->pos.x - p2->pos.x) <= 0.5 &&
-          fabsf(p1->pos.y - p2->pos.y) <= 0.5) {
+      // The check distane shuold be at least 2x the pixel radius since that is
+      // what gets enforced in the collision handling
+      if (fabsf(p1->pos.x - p2->pos.x) <= 2.1 * get_pixel_radius() &&
+          fabsf(p1->pos.y - p2->pos.y) <= 2.1 * get_pixel_radius()) {
         handle_collision(p1, p2);
       }
     }

@@ -139,8 +139,8 @@ void handle_collisions() {
 
       // The check distane shuold be at least 2x the pixel radius since that is
       // what gets enforced in the collision handling
-      if (fabsf(p1->pos.x - p2->pos.x) <= 2.1 * get_pixel_radius() &&
-          fabsf(p1->pos.y - p2->pos.y) <= 2.1 * get_pixel_radius()) {
+      if (fabsf(p1->pos.x - p2->pos.x) <= 2 * get_pixel_radius() &&
+          fabsf(p1->pos.y - p2->pos.y) <= 2 * get_pixel_radius()) {
         handle_collision(p1, p2);
       }
     }

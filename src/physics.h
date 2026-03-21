@@ -7,7 +7,7 @@
 
 #define MAX_IMPULSE 10
 #define MAX_SPEED 10
-#define WAKE_THRESHOLD 5.0f
+#define WAKE_THRESHOLD 0.5f
 
 typedef struct {
   Particle *ps;

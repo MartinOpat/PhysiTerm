@@ -7,7 +7,7 @@
 
 #define MAX_IMPULSE 10
 #define MAX_SPEED 10
-#define WAKE_THRESHOLD 1.0f
+#define WAKE_THRESHOLD 0.5f
 #define CONTACT_DIST 1.0f  // particles are 1 character wide/tall
 
 typedef struct {

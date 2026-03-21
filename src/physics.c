@@ -90,6 +90,11 @@ void apply_boundary() {
       // Boundary
       p->vel.y = -p->vel.y;
       p->pos.y = max(0.0, min(p->pos.y, (float)(LINES - 1)));
+
+      // Slight snap to ground
+      if (fabsf(p->vel.y) < SLEEP_SPEED_TOLERANCE) {
+        p->vel.y = 0.0f;
+      }
     }
   }
 }
@@ -102,7 +107,11 @@ void handle_collision(Particle *p1, Particle *p2) {
 
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
-  float imp = -0.75 * speed_norm; // Restitution e = 0.5: coef = -(1+e)/2
+
+  // Restitution e = 0.0: coef = -(1+e)/2
+  // e = 0 --> perfectly inellastic
+  // e = 1 --> perfectly ellastic
+  float imp = -0.5 * speed_norm;
   imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
   // Update sleeping
@@ -148,8 +157,8 @@ void handle_collisions() {
 void update_sleeping() {
   for (int i = 0; i < o->currSizePs; ++i) {
     Particle *p = &o->ps[i];
-    if (fabs(p->vel.x) < SLEEP_SPEED_TOLERANCE &&
-        fabs(p->vel.y) < SLEEP_SPEED_TOLERANCE) {
+    if (fabsf(p->vel.x) < SLEEP_SPEED_TOLERANCE &&
+        fabsf(p->vel.y) < SLEEP_SPEED_TOLERANCE) {
       p->idleFrames++;
       if (p->idleFrames >= FRAMES_TO_SLEEP) {
         p->isSleeping = 1;

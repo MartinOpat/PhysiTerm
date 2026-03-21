@@ -1,6 +1,6 @@
 #pragma once
 
-#include "physics.h"
+#include "vec.h"
 
 typedef struct {
   Vecf pos;

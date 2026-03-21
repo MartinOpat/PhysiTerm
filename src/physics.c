@@ -17,7 +17,7 @@ void add_particle(Particle p) {
 
   if (o->currSizePs == o->maxSizePs) {
     o->maxSizePs *= 2;
-    o->ps = realloc(o, o->maxSizePs);
+    o->ps = realloc(o->ps, o->maxSizePs * sizeof(Particle));
   }
 }
 

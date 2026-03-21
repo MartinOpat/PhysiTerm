@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
 
   // Create world
-  init_world(16);
+  init_world(1024);
 
   // Main loop
   int quit = 0;
@@ -57,6 +57,7 @@ int main(int argc, char *argv[]) {
 
   // Shutdown
   // printf("\033[?1003l\n"); // Disable mouse movement terminal events
+  destroy_world();
   endwin();
   return EXIT_SUCCESS;
 }

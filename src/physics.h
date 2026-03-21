@@ -1,5 +1,6 @@
 #pragma once
 
+#include "algorithm.h"
 #include "particles.h"
 #include "vec.h"
 

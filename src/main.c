@@ -1,10 +1,17 @@
 #include <ncurses.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "physics.h"
 
 int main(int argc, char *argv[]) {
+  // Handle argvs
+  int numParticles = 128;
+  if (argc > 1) {
+    char *p;
+    numParticles = (int)strtol(argv[1], &p, 10);
+  }
 
   // Initialize ncurses
   initscr();
@@ -22,16 +29,16 @@ int main(int argc, char *argv[]) {
   srand(time(NULL));
 
   // Create world
-  init_world(1024);
+  init_world(numParticles);
 
   // Main loop
   int quit = 0;
-  int dts_per_frame = 1;
+  int dtsPerFrame = 1;
   while (!quit) {
     clear();
 
     // Update  physics
-    for (int i = 0; i < dts_per_frame; ++i) {
+    for (int i = 0; i < dtsPerFrame; ++i) {
       physics_update();
     }
 

@@ -150,7 +150,8 @@ void handle_collisions() {
 void update_sleeping() {
   for (int i = 0; i < o->currSizePs; ++i) {
     Particle *p = &o->ps[i];
-    if (p->vel.x < SLEEP_SPEED_TOLERANCE && p->vel.y < SLEEP_SPEED_TOLERANCE) {
+    if (fabs(p->vel.x) < SLEEP_SPEED_TOLERANCE &&
+        fabs(p->vel.y) < SLEEP_SPEED_TOLERANCE) {
       p->idleFrames++;
       if (p->idleFrames >= FRAMES_TO_SLEEP) {
         p->isSleeping = 1;

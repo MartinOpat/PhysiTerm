@@ -16,9 +16,8 @@ endif()
 add_executable(physiterm
     src/main.c
     src/physics.c
-    src/terminal.c
     src/particles.c
-    src/renderer.c
+    src/logs.c
 )
 
 # Link libraries

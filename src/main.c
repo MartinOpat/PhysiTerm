@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include "logs.h"
 #include "physics.h"
 
 int main(int argc, char *argv[]) {
@@ -20,6 +21,9 @@ int main(int argc, char *argv[]) {
   keypad(stdscr, TRUE);
   nodelay(stdscr, TRUE);
   curs_set(0);
+
+  // Initialize logging
+  init_logging();
 
   // Enable mouse events
   // mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
@@ -64,6 +68,7 @@ int main(int argc, char *argv[]) {
 
   // Shutdown
   // printf("\033[?1003l\n"); // Disable mouse movement terminal events
+  close_logging();
   destroy_world();
   endwin();
   return EXIT_SUCCESS;

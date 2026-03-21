@@ -92,7 +92,8 @@ void handle_collision(Particle *p1, Particle *p2) {
 
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
-  float imp = -speed_norm;
+  float imp = -0.9 * speed_norm; // Restitution 0.8
+  log_str("Debug: %f\n", imp);
 
   // Update positions
   p1->pos = sub(p1->pos, mul(n, overlap / 2.0));
@@ -108,11 +109,11 @@ void handle_collision(Particle *p1, Particle *p2) {
 void handle_collisions() {
   for (int i = 0; i < o->currSizePs; ++i) {
     for (int j = i + 1; j < o->currSizePs; ++j) {
-      Particle p1 = o->ps[i];
-      Particle p2 = o->ps[j];
-      if ((int)p1.pos.x == (int)p2.pos.x && (int)p1.pos.y == (int)p2.pos.y) {
-        printf("Collision!\n");
-        handle_collision(&p1, &p2);
+      Particle *p1 = &(o->ps[i]);
+      Particle *p2 = &(o->ps[j]);
+      if (abs((int)p1->pos.x - (int)p2->pos.x) <= 1 &&
+          abs((int)p1->pos.y - (int)p2->pos.y) <= 1) {
+        handle_collision(p1, p2);
       }
     }
   }

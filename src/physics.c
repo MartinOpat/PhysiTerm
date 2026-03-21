@@ -166,6 +166,7 @@ void physics_update() {
   update_positions();
   handle_collisions();
   apply_boundary();
+  update_sleeping();
 }
 
 // ================ Drawing Utils. ================

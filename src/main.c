@@ -17,7 +17,8 @@ int main(int argc, char *argv[]) {
   curs_set(0);
 
   // Enable mouse events
-  mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+  // mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+  // printf("\033[?1003h\n"); // Mouse movement too
 
   // Randomize seed
   srand(time(NULL));
@@ -62,20 +63,28 @@ int main(int argc, char *argv[]) {
       p.pos.y = max(0.0, min(p.pos.y, (float)(LINES - 1)));
     }
 
-    // Draw
-    mvaddch((int)p.pos.y, (int)p.pos.x, p.symbol);
-    refresh();
-    napms(16);
-
     int ch = getch();
     switch (ch) {
     case 'q':
       quit = 1;
       break;
+
+      // case KEY_MOUSE:
+      //   MEVENT event;
+      //   if (getmouse(&event) == OK) {
+      //     printw("MOUSEEEE\n");
+      //   }
+      //   break;
     }
+
+    // Draw
+    mvaddch((int)p.pos.y, (int)p.pos.x, p.symbol);
+    refresh();
+    napms(16);
   }
 
   // Shutdown
+  // printf("\033[?1003l\n"); // Disable mouse movement terminal events
   endwin();
   return EXIT_SUCCESS;
 }

@@ -156,8 +156,6 @@ void update_sleeping() {
         p->isSleeping = 1;
         p->vel.x = 0.0f;
         p->vel.y = 0.0f;
-      } else {
-        p->idleFrames = 0;
       }
     }
   }

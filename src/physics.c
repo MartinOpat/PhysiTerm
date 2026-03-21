@@ -39,7 +39,7 @@ void init_objects() {
 void init_particles(int num) {
   for (int i = 0; i < num; ++i) {
     Vecf v = get_random_vec(0, 10, 0, 2);
-    Particle p = {{{0.0}, {0.0}}, v, 'o'};
+    Particle p = {{{0.0}, {0.0}}, v, 'o', 0, 0};
     add_particle(p);
   }
 }
@@ -52,12 +52,16 @@ void destroy_world() {
 // ================ Actual Physics ================
 void update_velocities() {
   for (int i = 0; i < o->currSizePs; ++i) {
+    if (o->ps[i].isSleeping)
+      continue;
     o->ps[i].vel = add(o->ps[i].vel, mul(g, dt));
   }
 }
 
 void update_positions() {
   for (int i = 0; i < o->currSizePs; ++i) {
+    if (o->ps[i].isSleeping)
+      continue;
     o->ps[i].pos = add(o->ps[i].pos, mul(o->ps[i].vel, dt));
   }
 }
@@ -114,9 +118,35 @@ void handle_collisions() {
     for (int j = i + 1; j < o->currSizePs; ++j) {
       Particle *p1 = &(o->ps[i]);
       Particle *p2 = &(o->ps[j]);
+
+      if (!p1->isSleeping || !p2->isSleeping) {
+        p1->isSleeping = 0;
+        p1->idleFrames = 0;
+        p2->isSleeping = 0;
+        p2->idleFrames = 0;
+      } else {
+        continue;
+      }
+
       if (fabsf(p1->pos.x - p2->pos.x) <= 0.5 &&
           fabsf(p1->pos.y - p2->pos.y) <= 0.5) {
         handle_collision(p1, p2);
+      }
+    }
+  }
+}
+
+void update_sleeping() {
+  for (int i = 0; i < o->currSizePs; ++i) {
+    Particle *p = &o->ps[i];
+    if (p->vel.x < SLEEP_SPEED_TOLERANCE && p->vel.y < SLEEP_SPEED_TOLERANCE) {
+      p->idleFrames++;
+      if (p->idleFrames >= FRAMES_TO_SLEEP) {
+        p->isSleeping = 1;
+        p->vel.x = 0.0f;
+        p->vel.y = 0.0f;
+      } else {
+        p->idleFrames = 0;
       }
     }
   }

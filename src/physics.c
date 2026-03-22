@@ -39,8 +39,9 @@ void init_objects() {
 void init_particles(int num) {
   for (int i = 0; i < num; ++i) {
     Vecf v = get_random_vec(0, 10, 0, 2);
-    // Vecf pos = get_random_vec(0, COLS-1, 0, LINES-1);
-    Vecf pos = {{0}, {0}};
+    // Vecf pos = get_random_vec(0, COLS-1, 0, LINES-1);  // Random from top
+    Vecf pos = get_random_vec(0, 0, 0, LINES - 1);
+    // Vecf pos = {{0}, {0}};
     Particle p = {pos, v, 'O', 0, 0};
     add_particle(p);
   }

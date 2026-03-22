@@ -111,10 +111,10 @@ void handle_collision(Particle *p1, Particle *p2) {
   Vecf v_rel = sub(p2->vel, p1->vel);
   float speed_norm = dot(v_rel, n);
 
-  // Restitution e = 0.0: coef = -(1+e)/2
+  // Restitution e: coef = -(1+e)/2
   // e = 0 --> perfectly inellastic
   // e = 1 --> perfectly ellastic
-  float imp = -0.75 * speed_norm;
+  float imp = -1.0 * speed_norm;
   imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
   // Update sleeping

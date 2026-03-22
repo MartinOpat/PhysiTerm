@@ -5,10 +5,10 @@
 #include "particles.h"
 #include "vec.h"
 
-#define MAX_IMPULSE 10
-#define MAX_SPEED 10
+#define MAX_IMPULSE 50
+#define MAX_SPEED 50
 #define WAKE_THRESHOLD 0.5f
-#define CONTACT_DIST 1.0f  // particles are 1 character wide/tall
+#define CONTACT_DIST 1.0f // particles are 1 character wide/tall
 
 typedef struct {
   Particle *ps;

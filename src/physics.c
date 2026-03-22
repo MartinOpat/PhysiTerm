@@ -114,7 +114,7 @@ void handle_collision(Particle *p1, Particle *p2) {
   // Restitution e: coef = -(1+e)/2
   // e = 0 --> perfectly inellastic
   // e = 1 --> perfectly ellastic
-  float imp = -1.0 * speed_norm;
+  float imp = -1.0 * speed_norm;                  // TODO: Add a slider for e
   imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
   // Update sleeping

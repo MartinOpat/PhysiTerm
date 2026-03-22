@@ -31,9 +31,14 @@ void init_world(int num_init_particles) {
 void init_objects() {
   o = malloc(sizeof(Objects));
 
+  // Particles
   o->maxSizePs = 64;
   o->currSizePs = 0;
   o->ps = malloc(o->maxSizePs * sizeof(Particle));
+
+  // Mouse
+  MouseObject mo = {{{0}, {0}}, {{0}, {0}}, 0};
+  o->mouse = mo;
 }
 
 void init_particles(int num) {
@@ -50,6 +55,36 @@ void init_particles(int num) {
 void destroy_world() {
   free(o->ps);
   free(o);
+}
+
+// ================ Mouse ================
+void update_mouse(int x, int y) {
+  Vecf new_pos = {{x}, {y}};
+  o->mouse.vel = sub(new_pos, o->mouse.pos);
+  o->mouse.pos = new_pos;
+  o->mouse.active = 1;
+}
+
+void handle_mouse_collision() {
+  if (!o->mouse.active)
+    return;
+
+  for (int i = 0; i < o->currSizePs; ++i) {
+    Particle *p = &o->ps[i];
+    if (fabsf(p->pos.x - o->mouse.pos.x) <= CONTACT_DIST + 0.5f &&
+        fabsf(p->pos.y - o->mouse.pos.y) <= CONTACT_DIST + 0.5f) {
+      float d = dist(p->pos, o->mouse.pos);
+      Vecf n = div_vec(sub(p->pos, o->mouse.pos), d);
+      float speed = dot(o->mouse.vel, n);
+
+      // Only push particle away from mouse
+      if (speed > 0) {
+        p->vel = add(p->vel, mul(n, speed * 0.8f));
+        p->isSleeping = 0;
+        p->idleFrames = 0;
+      }
+    }
+  }
 }
 
 // ================ Actual Physics ================
@@ -175,8 +210,12 @@ void update_sleeping() {
 void physics_update() {
   update_velocities();
   update_positions();
+
+  handle_mouse_collision();
   handle_collisions();
+
   apply_boundary();
+
   update_sleeping();
 }
 

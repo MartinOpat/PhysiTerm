@@ -11,9 +11,19 @@
 #define CONTACT_DIST 1.0f // particles are 1 character wide/tall
 
 typedef struct {
+  Vecf pos;
+  Vecf vel;
+  int active;
+} MouseObject;
+
+void update_mouse(int x, int y);
+
+typedef struct {
   Particle *ps;
   int maxSizePs;
   int currSizePs;
+
+  MouseObject mouse;
 } Objects;
 
 void init_world(int num_init_particles);

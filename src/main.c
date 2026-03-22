@@ -6,6 +6,7 @@
 
 #include "logs.h"
 #include "physics.h"
+#include "terminal.h"
 
 static struct timespec last_frame;
 
@@ -29,7 +30,8 @@ int main(int argc, char *argv[]) {
   init_logging();
 
   // Enable mouse events
-  mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+  // mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
+  init_mouse_tracking();
 
   // Randomize seed
   srand(time(NULL));
@@ -58,14 +60,12 @@ int main(int argc, char *argv[]) {
       resizeterm(0, 0);
       wake_all();
       break;
-
-    case KEY_MOUSE:
-      MEVENT event;
-      if (getmouse(&event) == OK) {
-        update_mouse(event.x, event.y);
-      }
-      break;
     }
+
+    // Mouse events handled separately
+    int mx, my;
+    if (read_mouse(&mx, &my))
+      update_mouse(mx, my);
 
     // Draw
     draw();
@@ -84,6 +84,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Shutdown
+  close_mouse_tracking();
   close_logging();
   destroy_world();
   endwin();

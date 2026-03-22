@@ -18,6 +18,7 @@ add_executable(physiterm
     src/physics.c
     src/particles.c
     src/logs.c
+    src/terminal.c
 )
 
 # Link libraries

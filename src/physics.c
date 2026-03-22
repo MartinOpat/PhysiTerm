@@ -71,18 +71,16 @@ void handle_mouse_collision() {
 
   for (int i = 0; i < o->currSizePs; ++i) {
     Particle *p = &o->ps[i];
-    if (fabsf(p->pos.x - o->mouse.pos.x) <= CONTACT_DIST + 0.5f &&
-        fabsf(p->pos.y - o->mouse.pos.y) <= CONTACT_DIST + 0.5f) {
+    if (fabsf(p->pos.x - o->mouse.pos.x) <= 2 * CONTACT_DIST + 0.5f &&
+        fabsf(p->pos.y - o->mouse.pos.y) <= 2 * CONTACT_DIST + 0.5f) {
       float d = dist(p->pos, o->mouse.pos);
       Vecf n = div_vec(sub(p->pos, o->mouse.pos), d);
       float speed = dot(o->mouse.vel, n);
 
       // Only push particle away from mouse
-      if (speed > 0) {
-        p->vel = add(p->vel, mul(n, speed * 0.8f));
-        p->isSleeping = 0;
-        p->idleFrames = 0;
-      }
+      p->vel = add(p->vel, mul(n, speed * 0.8f));
+      p->isSleeping = 0;
+      p->idleFrames = 0;
     }
   }
 }

@@ -5,20 +5,32 @@
 #include <stdio.h>
 #include <unistd.h>
 
+// ==================== Mouse ====================
+
 static volatile int mouse_x = 0, mouse_y = 0;
 static volatile int mouse_updated = 0;
 static pthread_t mouse_thread;
 static volatile int running = 1;
 static FILE *tty;
 
+// TODO: Rename function, decouple logic for 'q' and mouse
 static void *mouse_reader(void *arg) {
   int fd = fileno(tty);
   char buf[64];
 
   while (running) {
-    // Wait for esc
     char c;
-    if (read(fd, &c, 1) != 1 || c != '\033')
+    if (read(fd, &c, 1) != 1)
+      continue;
+
+    // 'q'
+    if (c == 'q') {
+      quit_requested = 1;
+      continue;
+    }
+
+    // mouse
+    if (c != '\033')
       continue;
     if (read(fd, &c, 1) != 1 || c != '[')
       continue;
@@ -71,3 +83,6 @@ int read_mouse(int *x, int *y) {
   mouse_updated = 0;
   return 1;
 }
+
+// ==================== I/O ====================
+volatile int quit_requested = 0;

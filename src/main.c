@@ -50,17 +50,8 @@ int main(int argc, char *argv[]) {
       physics_update();
     }
 
-    int ch = getch();
-    switch (ch) {
-    case 'q':
+    if (quit_requested)
       quit = 1;
-      break;
-
-    case KEY_RESIZE:
-      resizeterm(0, 0);
-      wake_all();
-      break;
-    }
 
     // Mouse events handled separately
     int mx, my;

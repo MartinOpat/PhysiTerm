@@ -21,4 +21,6 @@ Optionally, you can specify the number of particles to spawn initially (default:
 ./bin/physiterm 1024
 ```
 
-To quite press "q".
+To quit press "q".
+
+Particles react to your cursor now!

@@ -1,3 +1,4 @@
+#include <bits/time.h>
 #include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,6 +6,8 @@
 
 #include "logs.h"
 #include "physics.h"
+
+static struct timespec last_frame;
 
 int main(int argc, char *argv[]) {
   // Handle argvs
@@ -27,7 +30,6 @@ int main(int argc, char *argv[]) {
 
   // Enable mouse events
   mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
-  printf("\033[?1003h\n"); // Mouse movement too
 
   // Randomize seed
   srand(time(NULL));
@@ -68,11 +70,20 @@ int main(int argc, char *argv[]) {
     // Draw
     draw();
     refresh();
-    napms(16);
+
+    // Sleep  until 16ms (60fps)
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    long elapsed_ms = (now.tv_sec - last_frame.tv_sec) * 1000 +
+                      (now.tv_nsec - last_frame.tv_nsec) / 1000000;
+    long rem = 16 - elapsed_ms;
+    if (rem > 0) {
+      napms(rem);
+    }
+    clock_gettime(CLOCK_MONOTONIC, &last_frame);
   }
 
   // Shutdown
-  printf("\033[?1003l\n"); // Disable mouse movement terminal events
   close_logging();
   destroy_world();
   endwin();

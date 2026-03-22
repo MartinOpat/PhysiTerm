@@ -41,7 +41,7 @@ void init_particles(int num) {
     Vecf v = get_random_vec(0, 10, 0, 2);
     // Vecf pos = get_random_vec(0, COLS-1, 0, LINES-1);
     Vecf pos = {{0}, {0}};
-    Particle p = {pos, v, 'o', 0, 0};
+    Particle p = {pos, v, 'O', 0, 0};
     add_particle(p);
   }
 }
@@ -113,7 +113,7 @@ void handle_collision(Particle *p1, Particle *p2) {
   // Restitution e = 0.0: coef = -(1+e)/2
   // e = 0 --> perfectly inellastic
   // e = 1 --> perfectly ellastic
-  float imp = -0.5 * speed_norm;
+  float imp = -0.75 * speed_norm;
   imp = max(-MAX_IMPULSE, min(MAX_IMPULSE, imp)); // cap impulse forces
 
   // Update sleeping
